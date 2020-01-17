@@ -5,6 +5,7 @@ import (
 	"YService/core/errorcode"
 	"YService/models/dto"
 	"YService/models/info"
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
@@ -172,8 +173,8 @@ func (this* ItemController)Get(){
 func (this* ItemController)List(){
 	tp,_ := this.GetInt64(":tp", 1)
 	childTp,_ := this.GetInt64(":childTp", 0)
-	count,_ := this.GetInt32("count",10)
-	offset,_:= this.GetInt32("offset",0)
+	limit,_ := this.GetInt32("PageSize",10)
+	offset,_:= this.GetInt32("Page",0)
 
 	o := orm.NewOrm()
 	qs := o.QueryTable("item_info")
@@ -185,15 +186,25 @@ func (this* ItemController)List(){
 	}
 
 	qs = qs.OrderBy("CrtTime")
-	qs = qs.Limit(count,offset)
+	qs = qs.Limit(limit,offset * limit)
 
-	data := []orm.Params{}
+	list := []orm.Params{}
 
-	_,err :=qs.Values( &data)		// 请求所有
+	_,err := qs.Values( &list)		// 请求所有
 
 	if err != nil {
 		logs.Info("go this...")
 	}
 
-	this.Success(data)
+	tsConn := tsDb.NewDbBase()
+	itemInfo := info.ItemInfo{}
+	dbCount := int64(0)
+	if childTp > 0 {
+		dbCount,_= tsConn.DbCount(&itemInfo,"Type",tp,"ChildType",childTp)
+	} else {
+		dbCount,_= tsConn.DbCount(&itemInfo,"Type",tp)
+	}
+
+
+	this.Success(beego.M{"count":dbCount,"list":list})
 }
