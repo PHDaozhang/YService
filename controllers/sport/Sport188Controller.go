@@ -2,7 +2,6 @@ package sport
 
 import (
 	"YService/controllers/system"
-	"strconv"
 )
 
 type Sport188Controller struct {
@@ -11,11 +10,36 @@ type Sport188Controller struct {
 
 //注单数据
 type wagers struct {
-	Id							int			`json:"id"`
+	Id							uint64			`json:"id"`
 	MemberCode					string 		`json:"memberCode"`
 	CurrencyCode				string		`json:"currencyCode"`
+	IpAddress					string		`json:"ipAddress"`
+	CreateTime					string		`json:"createTime"`
+	SettleTime					string		`json:"settleTime"`
+	WagerStatus					int			`json:"wagerStatus"`
+	Stake						float32		`json:"stake"`
+	ReturnAmount				float32		`json:"returnAmount"`
+	Channel                     int			`json:"channel"`
+	OddType						int			`json:"oddType"`
+	Odds						float32		`json:"odds"`
+	EventStartTime				string 		`json:"eventStartTime"`
+	Prefix                      string		`json:"prefix"`
+	BetType						string 		`json:"betType"`
+	ActiveBet					string		`json:"activeBet"`
+	OrderDate					string 		`json:"orderDate"`
+	Bets						[]Bet		`json:"bets"`
 }
 
+type Bet struct {
+	Id								uint64		`json:"id"`
+	Seq								int32 		`json:seq`
+	BetStatus						int			`json:"betStatus"`
+	Stake							int			`json:"stake"`
+	ReturnAmount					float32		`json:"returnAmount"`
+	Odds							float32		`json:"odds"`
+	BetType							string 		`json:"betType"`
+	Selection                 		string 		`json:"selection"`
+}
 
 // @Title 添加图片
 // @Description 添加图片
@@ -102,23 +126,96 @@ func (this* Sport188Controller)WithdrawalFund(){
 func (this* Sport188Controller)Wagers(){
 	retMap := []wagers{}
 
-	for i := 0; i < 10;i ++ {
-		item := wagers{}
-		item.Id = 123456464 + i
-		item.MemberCode = "yt_abc" + strconv.Itoa(i)
-		item.CurrencyCode = "CNY"
+	isSettled,_ := this.GetInt("isSettled",1)
 
-		retMap = append(retMap, item)
+	if isSettled == 1 {
+		//如果是1：未结账，2：已结账
+		for i := 0; i < 10;i ++ {
+			item := wagers{}
+			item.Id = 39092561659302 + uint64(i)
+			item.MemberCode = "yt_2045182"
+			item.CurrencyCode = "CNY"
+			item.IpAddress = "18.162.173.173"
+			item.CreateTime = "2010-01-10 01:59:29"
+			item.SettleTime = "2010-01-10 17:53:54"
+			item.WagerStatus = 2
+			item.Stake = 10.00
+			item.ReturnAmount = 19.80
+			item.Channel = 10
+			item.OddType  = 1
+			item.Odds = 1.980
+			item.Prefix = "yt"
+			item.BetType = "1x2"
+			item.ActiveBet = "0.00"
+			item.OrderDate = "2020-01-10 16:00:00"
+
+			bets := []Bet{}
+			//只有一个数据的情况
+			bet := Bet{}
+			bet.Id = 4774517234
+			bet.Seq = 1
+			bet.BetStatus = 1
+			bet.Stake = 10
+			bet.ReturnAmount = 19.8
+			bet.Odds = 1.98
+			bet.BetType = "1x2"
+
+
+
+			bets = append(bets,bet)
+			item.Bets = bets
+
+			retMap = append(retMap, item)
+		}
+
+	} else {
+		for i := 0; i < 2;i ++ {
+			item := wagers{}
+			item.Id = 39092561659302 + uint64(i)
+			item.MemberCode = "yt_2045182"
+			item.CurrencyCode = "CNY"
+			item.IpAddress = "18.162.173.173"
+			item.CreateTime = "2010-01-10 01:59:29"
+			item.SettleTime = "0000-00-00 00:00:00"
+			item.WagerStatus = 1
+			item.Stake = 10.00
+			item.ReturnAmount = 0.00
+			item.Channel = 10
+			item.OddType  = 1
+			item.Odds = 1.980
+			item.Prefix = "yt"
+			item.BetType = "1x2"
+			item.ActiveBet = "0.00"
+			item.OrderDate = "2020-01-10 16:00:00"
+
+			bets := []Bet{}
+			//只有一个数据的情况
+			bet := Bet{}
+			bet.Id = 4774517234
+			bet.Seq = 1
+			bet.BetStatus = 1
+			bet.Stake = 10
+			bet.ReturnAmount = 19.8
+			bet.Odds = 1.98
+			bet.BetType = "1x2"
+
+
+
+			bets = append(bets,bet)
+			item.Bets = bets
+
+			retMap = append(retMap, item)
+		}
 	}
 
-		this.Result = retMap
+	this.Result = retMap
 
 
 	this.TraceSportJson();
 }
 
 func (this *Sport188Controller) TraceSportJson() {
-	this.Data["json"] = &map[string]interface{}{"code": "COMM000", "msg": "Success", "data": this.Result,"carrier":map[string]interface{}{}}
+	this.Data["json"] = &map[string]interface{}{"code": "COMM0000", "msg": "Success", "data": this.Result,"carrier":map[string]interface{}{}}
 	this.ServeJSON()
 	this.StopRun()
 }

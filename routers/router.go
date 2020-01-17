@@ -3,15 +3,17 @@ package routers
 import (
 	"YService/controllers"
 	"YService/controllers/admin"
+	"YService/controllers/common"
 	"YService/controllers/sport"
 	"github.com/astaxie/beego"
 )
 
 func init() {
 
-
 	ysApi := beego.NewNamespace("/api",
 		beego.NSNamespace("/admin",beego.NSInclude(&admin.AdminController{})),
+		beego.NSNamespace("/item",beego.NSInclude(&common.ItemController{})),
+		beego.NSNamespace("/ad",beego.NSInclude(&common.AdController{})),
 		)
 	beego.AddNamespace(ysApi)
 
