@@ -1,0 +1,8 @@
+.idea
+swagger/
+*.tmp
+*.zip
+logs/
+*.exe
+*.exe~
+routers/[^_]*controllers_[^\.]*\.go

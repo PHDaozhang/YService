@@ -1,6 +1,6 @@
 package sys
 
-import "web-game-api/models/dto"
+import "YService/models/dto"
 
 type CommStruct struct {
 	Id            int64  `orm:"description(主键)"`

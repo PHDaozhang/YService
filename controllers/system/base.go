@@ -3,6 +3,7 @@ package system
 import (
 	"YService/conf"
 	"YService/models/dto"
+	"YService/models/sys"
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
@@ -20,7 +21,6 @@ import (
 	"tsEngine/tsTime"
 	"tsEngine/tsToken"
 	"tsEngine/tsValid"
-	"web-game-api/models/sys"
 )
 
 type BaseController struct {
@@ -34,7 +34,7 @@ type BaseController struct {
 	AdminUsername string
 	AdminName     string
 	RealAdminId   int64 // 如果当前是子账号登入，这个值是代理或推广账号ID
-	PersonInfo    sys.Admin
+	//PersonInfo    sys.Admin
 	Role          string
 }
 
@@ -127,6 +127,8 @@ func (this *BaseController) GetUserFormToken() (loginToken sys.LoginToken) {
 	tokenMap := tsToken.FromToken(token, conf.TokenSalt)
 	if tokenMap == nil {
 	}
+
+
 
 	adminId, _ := tokenMap["Id"]
 	logs.Trace("adminId:", adminId)
@@ -253,6 +255,7 @@ func (this *BaseController) CommDel(model sys.CommStructInterface) {
 }
 
 //获取节点和权限
+/**
 func GetNavPermission(oAdmin sys.Admin) (oNav interface{}, oRole interface{}, createRoles interface{}, err error) {
 
 	db := tsDb.NewDbBase()
@@ -318,6 +321,7 @@ func GetNavPermission(oAdmin sys.Admin) (oNav interface{}, oRole interface{}, cr
 	}
 	return oNav, oRole, createRoles, nil
 }
+ */
 
 type CommonAddHandler func(tsConn *tsDb.DbBase, model sys.CommStructInterface)
 

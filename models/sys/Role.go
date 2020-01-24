@@ -1,15 +1,11 @@
 package sys
 
 import (
+	"YService/conf"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
-	"strings"
-	"tsEngine/tsContain"
-	"tsEngine/tsDb"
 	"tsEngine/tsPagination"
-	"tsEngine/tsString"
 	"tsEngine/tsTime"
-	"web-game-api/conf"
 )
 
 //用户表模型
@@ -70,6 +66,7 @@ func (this *Role) List(adminId, page, pageSize int64, keyword string) (data []Ro
 
 }
 
+/**
 func (this *Role) VerifyRolePermission(adminId int64, permissions string) (pass bool, err error) {
 	pass = false
 	if adminId == conf.SystemAdminId {
@@ -105,9 +102,11 @@ func (this *Role) VerifyRolePermission(adminId int64, permissions string) (pass 
 	return
 }
 
+
 func (this *Role) SpecialPermission(needle string) bool {
 	return tsContain.InArrayString(strings.Split(conf.SpecialPermissions, ","), needle)
 }
+*/
 
 func (this *Role) CopyRoleTemplate(adminId int64) (ids []int64, err error) {
 	oRoles := []Role{}
