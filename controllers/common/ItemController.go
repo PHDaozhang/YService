@@ -9,6 +9,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
+	"strconv"
 	"strings"
 	"tsEngine/tsDb"
 	"tsEngine/tsOpCode"
@@ -175,6 +176,12 @@ func (this* ItemController)List(){
 	childTp,_ := this.GetInt64(":childTp", 0)
 	limit,_ := this.GetInt32("PageSize",10)
 	offset,_:= this.GetInt32("Page",0)
+
+	if offset > 0  {
+		offset = offset - 1
+	}
+
+	logs.Info("tp:" +  strconv.Itoa(int(tp)) + " childTp:" + strconv.Itoa(int(childTp)) + " limit:" + strconv.Itoa(int(limit)) + " offset:" + strconv.Itoa(int(offset)) )
 
 	o := orm.NewOrm()
 	qs := o.QueryTable("item_info")
